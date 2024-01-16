@@ -4,6 +4,48 @@ interface IRender {
     public function render(): string;
 }
 
+class baseDonne {
+    protected $pdo;
+
+    public function __construct() {
+        try {
+            $this->pdo = new PDO('sqlite:Base.db');
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            echo "Connexion réussie à la base de données.";
+        } catch (PDOException $e) {
+            echo "Erreur de connexion à la base de données : " . $e->getMessage();
+        }
+    }
+
+    function get_Question_from_db() {
+        $sql = "SELECT * FROM QuestionText";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $questions;
+    }
+
+    function questions_texte() {
+        $sql = "SELECT * FROM QuestionText";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $questions;
+    }
+
+    function liste_questions_from_db() {
+        $questions = $this->questions_texte();
+        $liste_questions = array();
+        
+        foreach ($questions as $q) {
+            $question = new question_text($q["nameQuestion"], $q["answer"], 1, "gpzorg,rpezign,etojsnrtoj");
+            $liste_questions[] = $question;
+        }
+
+        return $liste_questions;
+    }
+}
+
 function get_Question(){
     $source = 'data/data.json';
     $content = file_get_contents($source);
