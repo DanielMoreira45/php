@@ -1,5 +1,5 @@
 <?php
-require_once 'data/questionaire.php';
+require_once 'classes/baseDonne.php';
  
 $bd = new baseDonne();
 $liste_questions = $bd->liste_questions_from_db();
