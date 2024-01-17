@@ -14,7 +14,7 @@ class baseDonne {
         }
     }
 
-    function questions_texte(int $id) {
+    function questionsQuizz(int $id) {
         require_once 'classes/input_texte.php';
         $sql = "SELECT * FROM QuestionText NATURAL JOIN AppartientText WHERE idQuizz = $id";
         $stmt = $this->pdo->prepare($sql);
@@ -30,26 +30,19 @@ class baseDonne {
         return $liste_questions;
     }
 
-    function questions_radio(int $id) {
-        require_once 'classes/input_radio.php';
-        $sql = "SELECT * FROM QuestionRadio NATURAL JOIN AppartientRadio WHERE idQuizz = $id";
+    function getAllQuizz(){
+        require_once 'classes/quizz.php';
+        $sql = "SELECT * FROM Quizz";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
-        $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $liste_questions = array();
-        
-        foreach ($questions as $q) {
-            $choises = array();
-            $choises[] = $q["answer"];
-            $choises[] = $q["wrongAnswer1"];
-            $choises[] = $q["wrongAnswer2"];
-            $choises[] = $q["wrongAnswer3"];
-            $question = new input_radio($q["nameQuestion"], $choises, $q["answer"], 1, generateRandomString());
-            $liste_questions[] = $question;
+        $quizz = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $liste_quizz = array();
+        foreach ($quizz as $q) {
+            $quizz = new quizz($q["idQuizz"], $q["nameQuizz"], $q["description"]);
+            $liste_quizz[] = $quizz;
         }
-
-        return $liste_questions;
+        return $liste_quizz;
     }
-
 }
 ?>

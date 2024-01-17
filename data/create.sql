@@ -1,10 +1,8 @@
 -- Supprimez les tables si elles existent déjà
-DROP TABLE IF EXISTS AppartientCheckbox;
-DROP TABLE IF EXISTS AppartientText;
-DROP TABLE IF EXISTS AppartientRadio;
-DROP TABLE IF EXISTS QuestionCheckbox;
-DROP TABLE IF EXISTS QuestionText;
-DROP TABLE IF EXISTS QuestionRadio;
+
+DROP TABLE IF EXISTS Question;
+DROP TABLE IF EXISTS TypeQuestion;
+DROP TABLE IF EXISTS Reponse;
 DROP TABLE IF EXISTS Quizz;
 
 -- Créez la table Quizz
@@ -14,93 +12,101 @@ CREATE TABLE Quizz (
     `description` VARCHAR(255)
 );
 
--- Créez la table QuestionRadio
-CREATE TABLE QuestionRadio (
-    idRadio INT PRIMARY KEY,
-    nameQuestion VARCHAR(255),
-    answer VARCHAR(255),
-    wrongAnswer1 VARCHAR(255),
-    wrongAnswer2 VARCHAR(255),
-    wrongAnswer3 VARCHAR(255)
+CREATE TABLE IF NOT EXISTS TypeQuestion (
+    idType INTEGER PRIMARY KEY,
+    libelleType VARCHAR(20)
 );
 
--- Créez la table QuestionText
-CREATE TABLE QuestionText (
-    idText INT PRIMARY KEY,
-    nameQuestion VARCHAR(255),
-    answer VARCHAR(255)
-);
-
--- Créez la table QuestionCheckbox
-CREATE TABLE QuestionCheckbox (
-    idCheckbox INT PRIMARY KEY,
-    nameQuestion VARCHAR(255),
-    answer1 VARCHAR(255),
-    answer2 VARCHAR(255),
-    answer3 VARCHAR(255),
-    answer4 VARCHAR(255)
-);
-
--- Créez la table AppartientRadio
-CREATE TABLE AppartientRadio (
-    idQuizz INT,
-    idRadio INT,
-    PRIMARY KEY(idQuizz, idRadio),
+CREATE TABLE IF NOT EXISTS Question (
+    idQuizz INTEGER,
+    idType INTEGER,
+    idQuestion INTEGER,
+    libelleQuestion TEXT,
+    PRIMARY KEY(idQuizz, idQuestion),
     FOREIGN KEY(idQuizz) REFERENCES Quizz(idQuizz),
-    FOREIGN KEY(idRadio) REFERENCES QuestionRadio(idRadio)
+    FOREIGN KEY(idType) REFERENCES TypeQuestion(idType)
 );
 
--- Créez la table AppartientText
-CREATE TABLE AppartientText (
-    idQuizz INT,
-    idText INT,
-    PRIMARY KEY(idQuizz, idText),
-    FOREIGN KEY(idQuizz) REFERENCES Quizz(idQuizz),
-    FOREIGN KEY(idText) REFERENCES QuestionText(idText)
-);
-
--- Créez la table AppartientCheckbox
-CREATE TABLE AppartientCheckbox (
-    idQuizz INT,
-    idCheckbox INT,
-    PRIMARY KEY(idQuizz, idCheckbox),
-    FOREIGN KEY(idQuizz) REFERENCES Quizz(idQuizz),
-    FOREIGN KEY(idCheckbox) REFERENCES QuestionCheckbox(idCheckbox)
+CREATE TABLE IF NOT EXISTS Reponse (
+    idQuestion INTEGER,
+    idReponse INTEGER,
+    idQuizz INTEGER,
+    libelleReponse TEXT,
+    estCorrect BOOLEAN,
+    PRIMARY KEY(idQuizz, idQuestion, idReponse),
+    FOREIGN KEY(idQuestion) REFERENCES Question(idQuestion)
+    FOREIGN KEY(idQuizz) REFERENCES Quizz(idQuizz)
 );
 
 -- Ajoutez des données à la table Quizz
 INSERT INTO Quizz (idQuizz, nameQuizz, `description`) VALUES
-(1, 'Quizz Général', 'Test de connaissances générales'),
+(1, 'Quizz Capitales', 'Quiz sur les capitales du monde'),
 (2, 'Quizz Mathématiques', 'Test de compétences mathématiques');
 
+INSERT INTO TypeQuestion (idType, libelleType) VALUES 
+(1, 'Radio'),
+(2, 'Texte');
+
 -- Ajoutez des données à la table QuestionRadio
-INSERT INTO QuestionRadio (idRadio, nameQuestion, answer, wrongAnswer1, wrongAnswer2, wrongAnswer3) VALUES
-(1, 'Quelle est la capitale de la France ?', 'Paris', 'Londres', 'Berlin', 'Madrid'),
-(2, 'Combien de côtés a un triangle ?', '3', '4', '5', '6');
+INSERT INTO Question (idQuizz, idType, idQuestion, libelleQuestion) VALUES
+(1, 1, 1, 'Quelle est la capitale de la France ?'),
+(1, 1, 2, 'Quelle est la capitale de l''Allemagne ?'),
+(1, 1, 3, 'Quelle est la capitale de l''Italie ?'),
+(1, 1, 4, 'Quelle est la capitale de l''Espagne ?'),
+(1, 1, 5, 'Quelle est la capitale du Canada ?'),
+(1, 1, 6, 'Quelle est la capitale du Japon ?'),
+(1, 1, 7, 'Quelle est la capitale de l''Australie ?'),
+(1, 1, 8, 'Quelle est la capitale du Brésil ?'),
+(1, 1, 9, 'Quelle est la capitale de la Chine ?'),
+(1, 1, 10, 'Quelle est la capitale de l''Inde ?'),
+(2, 2, 1, 'Combien font 5 + 3 ?'),
+(2, 2, 2, 'Combien font 7 - 2 ?'),
+(2, 2, 3, 'Combien font 2 * 4 ?'),
+(2, 2, 4, 'Combien font 10 / 2 ?');
 
--- Ajoutez des données à la table QuestionText
-INSERT INTO QuestionText (idText, nameQuestion, answer) VALUES
-(1, 'Quelle est la formule de l''eau ?', 'H2O'),
-(2, 'Qui a écrit Roméo et Juliette ?', 'William Shakespeare');
+INSERT INTO Reponse (idQuestion, idReponse, idQuizz, libelleReponse, estCorrect) VALUES
+(1, 1, 1, 'Paris', 1),
+(1, 2, 1, 'Lyon', 0),
+(1, 3, 1, 'Marseille', 0),
+(1, 4, 1, 'Toulouse', 0),
+(2, 1, 1, 'Berlin', 1),
+(2, 2, 1, 'Hambourg', 0),
+(2, 3, 1, 'Munich', 0),
+(2, 4, 1, 'Francfort', 0),
+(3, 1, 1, 'Rome', 1),
+(3, 2, 1, 'Milan', 0),
+(3, 3, 1, 'Naples', 0),
+(3, 4, 1, 'Turin', 0),
+(4, 1, 1, 'Madrid', 1),
+(4, 2, 1, 'Barcelone', 0),
+(4, 3, 1, 'Séville', 0),
+(4, 4, 1, 'Valence', 0),
+(5, 1, 1, 'Ottawa', 1),
+(5, 2, 1, 'Toronto', 0),
+(5, 3, 1, 'Vancouver', 0),
+(5, 4, 1, 'Montreal', 0),
+(6, 1, 1, 'Tokyo', 1),
+(6, 2, 1, 'Osaka', 0),
+(6, 3, 1, 'Kyoto', 0),
+(6, 4, 1, 'Yokohama', 0),
+(7, 1, 1, 'Canberra', 1),
+(7, 2, 1, 'Sydney', 0),
+(7, 3, 1, 'Melbourne', 0),
+(7, 4, 1, 'Brisbane', 0),
+(8, 1, 1, 'Brasilia', 1),
+(8, 2, 1, 'Rio de Janeiro', 0),
+(8, 3, 1, 'Sao Paulo', 0),
+(8, 4, 1, 'Belo Horizonte', 0),
+(9, 1, 1, 'Pékin', 1),
+(9, 2, 1, 'Shanghai', 0),
+(9, 3, 1, 'Canton', 0),
+(9, 4, 1, 'Shenzhen', 0),
+(10, 1, 1, 'New Delhi', 1),
+(10, 2, 1, 'Mumbai', 0),
+(10, 3, 1, 'Bangalore', 0),
+(10, 4, 1, 'Kolkata', 0),
+(1, 1, 2, '8', 1),
+(2, 1, 2, '5', 1),
+(3, 1, 2, '8', 1),
+(4, 1, 2, '5', 1);
 
--- Ajoutez des données à la table QuestionCheckbox
-INSERT INTO QuestionCheckbox (idCheckbox, nameQuestion, answer1, answer2, answer3, answer4) VALUES
-(1, 'Quels sont les couleurs primaires ?', 'Rouge', 'Vert', 'Bleu', 'Jaune'),
-(2, 'Quels sont les continents du monde ?', 'Amérique', 'Asie', 'Europe', 'Afrique');
-
--- Ajoutez des données à la table AppartientRadio
-INSERT INTO AppartientRadio (idQuizz, idRadio) VALUES
-(1, 1),
-(1, 2),
-(2, 1);
-
--- Ajoutez des données à la table AppartientText
-INSERT INTO AppartientText (idQuizz, idText) VALUES
-(1, 1),
-(2, 2);
-
--- Ajoutez des données à la table AppartientCheckbox
-INSERT INTO AppartientCheckbox (idQuizz, idCheckbox) VALUES
-(1, 1),
-(1, 2),
-(2, 2);
