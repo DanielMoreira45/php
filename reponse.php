@@ -1,6 +1,7 @@
 <?php
 require_once 'data/questionaire.php';
-$liste_questions = liste_questions();
+session_start();
+$liste_questions = $_SESSION['liste_questions'];
 ?>
 
 <!DOCTYPE html>

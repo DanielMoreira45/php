@@ -1,8 +1,10 @@
 <?php
 require_once 'classes/baseDonne.php';
- 
+session_start();
 $bd = new baseDonne();
-$liste_questions = $bd->liste_questions_from_db();
+$liste_questions = $bd->questions_texte(1);
+$liste_questions = array_merge($liste_questions, $bd->questions_radio(1));
+$_SESSION['liste_questions'] = $liste_questions;
 
 
 ?>
