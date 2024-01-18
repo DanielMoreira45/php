@@ -15,8 +15,9 @@ class quizz implements IRender {
         $html = "<div class='quizz'>";
         $html .= "<h2>$this->name</h2>";
         $html .= "<p>$this->description</p>";
-        $html .= "<a href='quizz.php?id=$this->idQuizz'>Jouer</a>";
+        $html .= "<a href='playquizz.php?id=$this->idQuizz'>Jouer</a>";
         $html .= "</div>";
         return $html;
     }
 }
+?>

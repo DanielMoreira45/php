@@ -48,5 +48,9 @@ class input_texte implements IRender {
         return $this->answer;
     }
 
+    public function getLibelleReponse($id){
+        return $id;
+    }
+
 }
 ?>

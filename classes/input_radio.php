@@ -23,17 +23,18 @@ class input_radio implements IRender {
         foreach ($this->choices as $c) {
             $i += 1;
             $html .= "<input type='radio' name='{$this->nameIdentifier}' value='$i'";
-            $html .= "<label for='$i'>$c</label>";
+            $html .= "<label for='$i'>".$c["libelleReponse"]."</label>";
+            $html .= "<br>";
         }
     
         return $html .= "<br>";
     }
         
     public function correct($answer){
-        if ($this->answer == $this->choices[$answer]){
-            return TRUE;
-        } else {
-            return FALSE;
+        foreach($this->choices as $c){
+            if($c["idQuestion"] == $answer){
+                return $c["estCorrect"];
+            }
         }
     }
     public function getlabel(){
@@ -44,6 +45,18 @@ class input_radio implements IRender {
     }
     public function getCorrectAnswer(){
         return $this->answer;
+    }
+
+    public function getScore(){
+        return $this->score;
+    }
+
+    public function getLibelleReponse($id){
+        foreach($this->choices as $c){
+            if($c["idReponse"] == $id){
+                return $c["libelleReponse"];
+            }
+        }
     }
 }
 ?>
