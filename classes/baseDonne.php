@@ -69,36 +69,68 @@ class baseDonne {
         return $reponse[0]["libelleReponse"];
     }
 
-    function getAllQuizz(){
+    function getAllQuizz() {
         require_once 'classes/quizz.php';
+    
         $sql = "SELECT * FROM Quizz";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
-        $quizz = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        $quizzData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
         $liste_quizz = array();
-        foreach ($quizz as $q) {
-            $quizz = new quizz($q["idQuizz"], $q["nameQuizz"], $q["description"]);
-            $liste_quizz[] = $quizz;
+        foreach ($quizzData as $q) {
+            $quiz = new quizz($q["idQuizz"], $q["nameQuizz"], $q["description"]);
+            $liste_quizz[] = $quiz;
         }
         return $liste_quizz;
     }
 
-    function creerQuizz($nameQuizz, $description, $questions){
-        $stmt = $this->pdo->prepare("INSERT INTO Quizz (nameQuizz, `description`) VALUES (:name, :description)");
-        $stmt->bindParam(':name', $quizName, PDO::PARAM_STR);
-        $stmt->bindParam(':description', $quizDescription, PDO::PARAM_STR);
+    public function creerQuizz($quizName, $quizDescription, $questions, $propositions){
+        // Insertion du quizz
+        $sqlid = "SELECT MAX(idQuizz) FROM Quizz";
+        $stmtid = $this->pdo->prepare($sqlid);
+        $stmtid->execute();
+        $idQuizzR = $stmtid->fetchAll(PDO::FETCH_ASSOC);
+        $idQuizzR = $idQuizzR[0]["MAX(idQuizz)"] + 1;
+    
+        $sql = "INSERT INTO Quizz (idQuizz, nameQuizz, description) VALUES (:idQuizz, :nameQuizz, :description)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':idQuizz', $idQuizzR);
+        $stmt->bindParam(':nameQuizz', $quizName);
+        $stmt->bindParam(':description', $quizDescription);
         $stmt->execute();
-
+    
+        // Récupération de l'ID du quizz nouvellement créé
         $idQuizz = $this->pdo->lastInsertId();
+    
+        // Insertion des questions et propositions
+        for ($i = 0; $i < count($questions); $i++) {
+            $question = $questions[$i];
+            $maxIdQuestion = $this->pdo->query("SELECT MAX(idQuestion) FROM Question")->fetchColumn();
 
-        foreach ($questions as $question) {
-            $stmt = $this->pdo->prepare("INSERT INTO Question (idQuizz, idType, libelleQuestion) VALUES (:idQuizz, :idType, :libelleQuestion)");
-            $stmt->bindParam(':idQuizz', $idQuizz, PDO::PARAM_INT);
-            $stmt->bindParam(':idType', 2, PDO::PARAM_INT);
-            $stmt->bindParam(':libelleQuestion', $question, PDO::PARAM_STR);
+            // Insertion de la question
+            $sql = "INSERT INTO Question (idQuizz, libelleQuestion, idType, idQuestion) VALUES (:idQuizz, :libelleQuestion, 1, :idQuestion)";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':idQuizz', $idQuizz);
+            $stmt->bindParam(':libelleQuestion', $question);
+            $stmt->bindParam(':idQuestion', $maxIdQuestion + 1);
             $stmt->execute();
+    
+            // Récupération de l'ID de la question nouvellement créée
+            $idQuestion = $this->pdo->lastInsertId();
+    
+            // Insertion des propositions
+            foreach ($propositions[$i] as $proposition) {
+                $maxIdReponse = $this->pdo->query("SELECT MAX(idReponse) FROM Reponse")->fetchColumn();
+                $sql = "INSERT INTO Reponse (idQuizz, idQuestion, libelleReponse, estCorrect) VALUES ($idQuizz, $idQuestion, $proposition, :estCorrect, $maxIdReponse +1)";
+                $stmt = $this->pdo->prepare($sql);
+                // Vous devez ajuster la valeur de :estCorrect en fonction de votre logique
+                $stmt->bindValue(':estCorrect', false);
+                $stmt->execute();
+            }
         }
     }
+    
+    
 }
 ?>

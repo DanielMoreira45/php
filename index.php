@@ -9,21 +9,24 @@ $liste_questions = $bd->getAllQuizz();
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="data/css/index.css">
     <title>Formulaire</title>
 </head>
 
 <body>
-
+    <div>
     <?php
     foreach ($liste_questions as $q) {
         echo $q->render();
     }
 
     ?>
-    <form action="creer.php" method="get">
-        <button>Créer un quizz</button>
-    </form>
-    </form>
+    </div>
+    <form action="creer.php" method="post">
+    <button type="submit">Créer un quizz</button>
+</form>
+
+
 </body>
 
 </html>
