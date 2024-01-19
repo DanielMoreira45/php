@@ -38,9 +38,9 @@ class baseDonne {
         {
             $reponse = $this->getReponse($id, $q["idQuestion"]);
             if ($q["idType"] == "1"){
-                $question = new input_radio($q["libelleQuestion"], $this->getPropositions($id,$q["idQuestion"]), $reponse, 1, generateRandomString());
+                $question = new input_radio($q["libelleQuestion"], $this->getPropositions($id,$q["idQuestion"]), $reponse, 1, $q['nameIdentifier']);
             } else {
-                $question = new input_texte($q["libelleQuestion"], $reponse, 2, generateRandomString());
+                $question = new input_texte($q["libelleQuestion"], $reponse, 2, $q['nameIdentifier']);
             }
             $liste_questions[] = $question;
         }

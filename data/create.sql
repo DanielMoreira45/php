@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS Question (
     idType INTEGER,
     idQuestion INTEGER,
     libelleQuestion TEXT,
+    nameIdentifier TEXT,
     PRIMARY KEY(idQuizz, idQuestion),
     FOREIGN KEY(idQuizz) REFERENCES Quizz(idQuizz),
     FOREIGN KEY(idType) REFERENCES TypeQuestion(idType)
@@ -48,21 +49,21 @@ INSERT INTO TypeQuestion (idType, libelleType) VALUES
 (2, 'Texte');
 
 -- Ajoutez des données à la table QuestionRadio
-INSERT INTO Question (idQuizz, idType, idQuestion, libelleQuestion) VALUES
-(1, 1, 1, 'Quelle est la capitale de la France ?'),
-(1, 1, 2, 'Quelle est la capitale de l''Allemagne ?'),
-(1, 1, 3, 'Quelle est la capitale de l''Italie ?'),
-(1, 1, 4, 'Quelle est la capitale de l''Espagne ?'),
-(1, 1, 5, 'Quelle est la capitale du Canada ?'),
-(1, 1, 6, 'Quelle est la capitale du Japon ?'),
-(1, 1, 7, 'Quelle est la capitale de l''Australie ?'),
-(1, 1, 8, 'Quelle est la capitale du Brésil ?'),
-(1, 1, 9, 'Quelle est la capitale de la Chine ?'),
-(1, 1, 10, 'Quelle est la capitale de l''Inde ?'),
-(2, 2, 1, 'Combien font 5 + 3 ?'),
-(2, 2, 2, 'Combien font 7 - 2 ?'),
-(2, 2, 3, 'Combien font 2 * 4 ?'),
-(2, 2, 4, 'Combien font 10 / 2 ?');
+INSERT INTO Question (idQuizz, idType, idQuestion, libelleQuestion, nameIdentifier) VALUES
+(1, 1, 1, 'Quelle est la capitale de la France ?','xiIwcVIf7Y'),
+(1, 1, 2, 'Quelle est la capitale de l''Allemagne ?','R8ayhN1E8B'),
+(1, 1, 3, 'Quelle est la capitale de l''Italie ?','fqNrxLDo6v'),
+(1, 1, 4, 'Quelle est la capitale de l''Espagne ?','X8Z3Z2Z2Z2'),
+(1, 1, 5, 'Quelle est la capitale du Canada ?','WWZdPON51Z'),
+(1, 1, 6, 'Quelle est la capitale du Japon ?', 'Z2Z2Z2Z2Z2'),
+(1, 1, 7, 'Quelle est la capitale de l''Australie ?', 'gtOykGCJ4b'),
+(1, 1, 8, 'Quelle est la capitale du Brésil ?', 'BYZQ2Q3wuQ'),
+(1, 1, 9, 'Quelle est la capitale de la Chine ?', 'x7MVYEdlPB'),
+(1, 1, 10, 'Quelle est la capitale de l''Inde ?', 'u9zlX5Wp8u'),
+(2, 2, 1, 'Combien font 5 + 3 ?','ISyaNA7PNw'),
+(2, 2, 2, 'Combien font 7 - 2 ?', 'GfiSo4InND'),
+(2, 2, 3, 'Combien font 2 * 4 ?', 'G2q8TiN3y9'),
+(2, 2, 4, 'Combien font 10 / 2 ?', 'NIWRLLozo2');
 
 INSERT INTO Reponse (idQuestion, idReponse, idQuizz, libelleReponse, estCorrect) VALUES
 (1, 1, 1, 'Paris', 1),

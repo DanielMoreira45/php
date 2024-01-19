@@ -2,7 +2,7 @@
 require_once 'classes/baseDonne.php';
 $bd = new baseDonne();
 session_start();
-$quizz = $_SESSION['quizz'];
+$quizz = $bd->getQuizz($_GET["idQuizz"]);
 ?>
 
 <!DOCTYPE html>
@@ -32,11 +32,11 @@ $quizz = $_SESSION['quizz'];
             font-size: 4rem;
         }
     </style>
-    <h1>Résultat <?php echo $quizz["nameQuizz"] ?></h1>
+    <h1>Résultat <?php echo $quizz->getName() ?></h1>
     <?php
     $score = 0;
     $maxi = 0;
-    foreach ($quizz["questions"] as $q) {
+    foreach ($quizz->getQuestions() as $q) {
         $name = $q->getName();
         $label = $q->getlabel();
         $correct = false;

@@ -4,7 +4,6 @@ session_start();
 $id = $_GET["id"];
 $bd = new baseDonne();
 $quizz = $bd->getQuizz($id);
-$_SESSION['quizz'] = $quizz;
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -15,18 +14,8 @@ $_SESSION['quizz'] = $quizz;
 
 <body>
     <form action="reponse.php" method="get">
-
-        <h1>
-            <?php echo $quizz["nameQuizz"] ?>
-        </h1>
-        <p>
-            <?php echo $quizz["description"] ?>
-        </p>
         <?php
-        foreach ($quizz["questions"] as $q) {
-            echo $q->render();
-        }
-
+        echo $quizz->render();
         ?>
         <input type="submit" value="Envoyer">
     </form>
