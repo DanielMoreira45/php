@@ -15,19 +15,15 @@ class baseDonne {
     }
 
     function getQuizz(int $id) {
+        require_once 'classes/question.php';
         $sql = "SELECT * FROM Quizz WHERE idQuizz = $id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $quizz = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $quizzReturn = array();
-
-        $quizzReturn["idQuizz"] = $quizz[0]["idQuizz"];
-        $quizzReturn["nameQuizz"] = $quizz[0]["nameQuizz"];
-        $quizzReturn["description"] = $quizz[0]["description"];
-        $quizzReturn["questions"] = $this->getQuestions($id);
-
-        return $quizzReturn;
+        $quizz = new questions($quizz[0]["idQuizz"], $quizz[0]["nameQuizz"], $quizz[0]["description"], $this->getQuestions($id));
+        return $quizz;
     }
 
     function getQuestions($id){
